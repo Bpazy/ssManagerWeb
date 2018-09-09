@@ -1,18 +1,27 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <p v-for="item of list" :key="item.port">{{item.port}}: {{item.usage | readable}}</p>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
 export default {
   name: "home",
-  components: {
-    HelloWorld
+  data() {
+    return {
+      list: []
+    };
+  },
+  created() {
+    this.list.push({
+      port: 6666,
+      usage: 115343360
+    });
+  },
+  filters: {
+    readable(usage) {
+      return `${usage / 1024 / 1024}MB`;
+    }
   }
 };
 </script>
