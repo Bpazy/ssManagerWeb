@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <p v-for="item of list" :key="item.port">{{item.port}}: {{item.usage | readable}}</p>
+    <p v-for="item of list" :key="item.port">{{item.port}}({{item.alias}}): {{item.usage | readable}}</p>
   </div>
 </template>
 
