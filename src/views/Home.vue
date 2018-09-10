@@ -12,15 +12,12 @@ export default {
       list: []
     };
   },
-  created() {
-    this.list.push({
-      port: 6666,
-      usage: 115343360
-    });
+  async created() {
+    this.list = (await this.$http.get("/list")).data;
   },
   filters: {
     readable(usage) {
-      return `${usage / 1024 / 1024}MB`;
+      return `${(usage / 1024 / 1024).toFixed(2)}MB`;
     }
   }
 };
