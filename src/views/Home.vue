@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <div>
+      <el-button type="primary" icon="el-icon-refresh" circle @click="load" :loading="loading"></el-button>
+    </div>
     <p v-for="item of list" :key="item.port">{{item.port}}({{item.alias}}): {{item.usage | readable}}</p>
   </div>
 </template>
@@ -9,11 +12,19 @@ export default {
   name: "home",
   data() {
     return {
-      list: []
+      list: [],
+      loading: false
     };
   },
   async created() {
-    this.list = (await this.$http.get("/list")).data;
+    this.load();
+  },
+  methods: {
+    async load() {
+      this.loading = true;
+      this.list = (await this.$http.get("/list")).data;
+      this.loading = false;
+    }
   },
   filters: {
     readable(usage) {
