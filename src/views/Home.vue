@@ -40,17 +40,19 @@ export default {
           form: {
             port: "",
             alias: ""
+          },
+          async confirm(form) {
+            await self.$http.post("/save", {
+              port: parseInt(form.port),
+              alias: form.alias
+            });
+            await self.load();
+            self.$dialog.close();
+          },
+          cancel() {
+            self.$dialog.close();
           }
-        },
-        async confirm(props) {
-          const form = props.form;
-          await self.$http.post("/save", {
-            port: parseInt(form.port),
-            alias: form.alias
-          });
-          await self.load();
-        },
-        cancel() {}
+        }
       });
     }
   },
