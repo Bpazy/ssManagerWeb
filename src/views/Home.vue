@@ -1,13 +1,15 @@
 <template>
   <div class="home">
     <div>
-      <el-button type="success" icon="el-icon-refresh" circle @click="load" :loading="refreshLoading"></el-button>
-      <el-button type="primary" icon="el-icon-plus" circle @click="addRule" :loading="addLoading"></el-button>
+      <el-button type="success" icon="el-icon-refresh" @click="load" :loading="refreshLoading"></el-button>
+      <el-button type="primary" icon="el-icon-plus" @click="addRule" :loading="addLoading"></el-button>
     </div>
 
     <div v-for="(rule, index) of rules" :key="rule.port" class="item">
-      <el-button type="primary" icon="el-icon-delete" size="mini" circle @click="deleteRule(rule, index)" :loading="rule.loading"></el-button>
       <span class="itemDesc">{{rule.port}}({{rule.alias}}): {{rule.usage | readable}}</span>
+      <el-button type="primary" icon="el-icon-delete" size="mini">编辑</el-button>
+      <el-button type="primary" icon="el-icon-search" size="mini">重置</el-button>
+      <el-button type="primary" icon="el-icon-search" size="mini" @click="deleteRule(rule, index)">删除</el-button>
     </div>
   </div>
 </template>
