@@ -6,10 +6,13 @@
     </div>
 
     <div v-for="(rule, index) of rules" :key="rule.port" class="item">
-      <span class="itemDesc">{{rule.port}}({{rule.alias}}): {{rule.usage | readable}}</span>
-      <el-button type="primary" icon="el-icon-delete" size="mini">编辑</el-button>
-      <el-button type="primary" icon="el-icon-search" size="mini">重置</el-button>
-      <el-button type="primary" icon="el-icon-search" size="mini" @click="deleteRule(rule, index)">删除</el-button>
+      <span class="alias">{{rule.port}}({{rule.alias}}): </span>
+      <span class="usage">{{rule.usage | readable}}</span>
+      <div class="buttons">
+        <el-button type="primary" icon="el-icon-delete" size="mini">编辑</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini">重置</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="deleteRule(rule, index)">删除</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -100,10 +103,29 @@ export default {
 };
 </script>
 <style scoped>
-.item {
-  margin: 5px;
+.home {
+  width: 800px;
+  margin: 0 auto;
 }
-.itemDesc {
-  margin: 0 5px 0 5px;
+
+.item {
+  display: flex;
+  height: 40px;
+  line-height: 40px;
+}
+.alias {
+  flex: none;
+  width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.usage {
+  flex: none;
+  width: 100px;
+  margin-left: 10px;
+}
+.buttons {
+  flex: 1;
 }
 </style>

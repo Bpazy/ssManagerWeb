@@ -8,7 +8,7 @@
         <el-input v-model="formData.alias" auto-complete="off"></el-input>
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div class="dialog-footer">
       <el-button @click="cancel">取 消</el-button>
       <el-button type="primary" @click="_confirm">确 定</el-button>
     </div>
@@ -44,3 +44,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.dialog-footer {
+  text-align: center;
+}
+</style>
