@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div>
-      <el-button type="primary" icon="el-icon-plus" @click="addRule" :loading="addLoading"></el-button>
+      <el-button type="primary" icon="el-icon-plus" @click="addRule"></el-button>
     </div>
 
     <div v-for="(rule, index) of rules" :key="rule.port" class="item">
@@ -43,7 +43,6 @@ export default {
       this.rules = (await this.$http.get("/list")).data;
     },
     addRule() {
-      this.addLoading = true;
       const self = this;
       this.$dialog.open({
         component: () => import("@/views/AddSetting"),
@@ -59,11 +58,9 @@ export default {
             });
             await self.load();
             self.$dialog.close();
-            self.addLoading = false;
           },
           cancel() {
             self.$dialog.close();
-            self.addLoading = false;
           }
         }
       });
