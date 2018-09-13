@@ -9,9 +9,9 @@
       <span class="alias">{{rule.port}}({{rule.alias}}): </span>
       <span class="usage">{{rule.usage | readable}}</span>
       <div class="buttons">
-        <el-button type="primary" icon="el-icon-delete" size="mini">编辑</el-button>
-        <el-button type="primary" icon="el-icon-search" size="mini">重置</el-button>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="deleteRule(rule, index)">删除</el-button>
+        <el-button type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
+        <el-button type="primary" icon="el-icon-refresh" size="mini">重置</el-button>
+        <el-button type="primary" icon="el-icon-delete" size="mini" @click="deleteRule(rule, index)">删除</el-button>
       </div>
     </div>
   </div>
