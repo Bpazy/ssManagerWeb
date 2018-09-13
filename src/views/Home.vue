@@ -32,6 +32,7 @@ export default {
     };
   },
   async created() {
+    await this.load();
     setInterval(async () => {
       await this.load();
     }, 3000);
