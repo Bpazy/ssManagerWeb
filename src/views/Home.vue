@@ -1,7 +1,6 @@
 <template>
   <div class="home">
     <div>
-      <el-button type="success" icon="el-icon-refresh" @click="load" :loading="refreshLoading"></el-button>
       <el-button type="primary" icon="el-icon-plus" @click="addRule" :loading="addLoading"></el-button>
     </div>
 
@@ -9,8 +8,8 @@
       <span class="alias">{{rule.port}}({{rule.alias}}): </span>
       <span class="usage">{{rule.usage | readable}}</span>
       <div class="buttons">
-        <el-button type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
-        <el-button type="primary" icon="el-icon-refresh" size="mini">重置</el-button>
+        <el-button type="primary" icon="el-icon-edit" size="mini" @click="editRule(rule)">编辑</el-button>
+        <el-button type="primary" icon="el-icon-refresh" size="mini"  @click="resetRule(rule)">重置</el-button>
         <el-button type="primary" icon="el-icon-delete" size="mini" @click="deleteRule(rule, index)">删除</el-button>
       </div>
     </div>
@@ -27,21 +26,20 @@ export default {
         port: "",
         alias: ""
       },
-      refreshLoading: false,
       addLoading: false,
       deleteLoading: false,
       addDialogFormVisible: false
     };
   },
   async created() {
-    await this.load();
+    setInterval(async () => {
+      await this.load();
+    }, 3000);
     this.rules.forEach(rule => (rule.loading = false));
   },
   methods: {
     async load() {
-      this.refreshLoading = true;
       this.rules = (await this.$http.get("/list")).data;
-      this.refreshLoading = false;
     },
     addRule() {
       this.addLoading = true;
@@ -69,9 +67,7 @@ export default {
         }
       });
     },
-    async deleteRule(rule, index) {
-      this.setRuleLoadingState(index, true);
-
+    async deleteRule(rule) {
       try {
         await this.$confirm("此操作将导致历史记录被清空, 是否继续?", "提示", {
           confirmButtonText: "确定",
@@ -86,13 +82,52 @@ export default {
 
         await this.load();
       } catch (e) {
-        this.setRuleLoadingState(index, false);
+        console.log(e);
       }
     },
-    setRuleLoadingState(index, loadingState) {
-      const rule = this.rules[index];
-      rule.loading = loadingState;
-      this.$set(this.rules, index, rule);
+    editRule(rule) {
+      const self = this;
+      this.$dialog.open({
+        component: () => import("@/views/AddSetting"),
+        props: {
+          editMode: true,
+          form: {
+            port: rule.port,
+            alias: rule.alias
+          },
+          async confirm(form) {
+            const { code, msg } = (await self.$http.post("/edit", {
+              port: parseInt(form.port),
+              alias: form.alias
+            })).data;
+            await self.load();
+            self.$dialog.close();
+            if (code === "Ok") this.$message({ message: msg, type: "success" });
+            else this.$message.error(msg);
+          },
+          cancel() {
+            self.$dialog.close();
+          }
+        }
+      });
+    },
+    async resetRule(rule) {
+      try {
+        await this.$confirm("此操作将清空历史记录, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        });
+        const { code, msg } = (await this.$http.get(
+          `/reset/${rule.port}`
+        )).data;
+        if (code === "Ok") this.$message({ message: msg, type: "success" });
+        else this.$message.error(msg);
+
+        await this.load();
+      } catch (e) {
+        console.log(e);
+      }
     }
   },
   filters: {

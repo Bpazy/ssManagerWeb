@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form :model="formData">
-      <el-form-item label="端口号" label-width="120px">
+      <el-form-item label="端口号" label-width="120px" v-if="!editMode">
         <el-input v-model="formData.port" auto-complete="off"></el-input>
       </el-form-item>
       <el-form-item label="别名" label-width="120px">
@@ -18,6 +18,7 @@
 <script>
 export default {
   props: {
+    editMode: false,
     form: {
       default() {
         return {
