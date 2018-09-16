@@ -31,7 +31,6 @@ export default {
   },
   methods: {
     _confirm() {
-      console.log(this.formData);
       this.confirm(this.formData);
     }
   }
