@@ -7,7 +7,12 @@
 
 <script>
 import MyDialog from "@/views/MyDialog";
+import { setDialog } from "@/util/util";
+
 export default {
+  mounted() {
+    setDialog(this.$dialog);
+  },
   components: {
     MyDialog
   }
