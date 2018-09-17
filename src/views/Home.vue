@@ -51,10 +51,6 @@ export default {
       this.$dialog.open({
         component: () => import("@/views/AddSetting"),
         props: {
-          form: {
-            port: "",
-            alias: ""
-          },
           async confirm(form) {
             await self.$http.post("/save", {
               port: parseInt(form.port),

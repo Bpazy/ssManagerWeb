@@ -19,21 +19,14 @@
 export default {
   props: {
     editMode: false,
-    form: {
-      default() {
-        return {
-          port: "",
-          alias: ""
-        };
-      }
-    },
     cancel: Function,
     confirm: Function
   },
   data() {
     return {
       formData: {
-        ...this.form
+        port: "",
+        alias: ""
       }
     };
   },
