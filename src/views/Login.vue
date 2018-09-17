@@ -1,11 +1,12 @@
 <template>
   <div>
-    <el-form :model="formData">
+    <el-form :model="form">
       <el-form-item label="用户名" label-width="120px">
-        <el-input v-model="formData.username" auto-complete="off"></el-input>
+        <el-input v-model="form.username" auto-complete="off"></el-input>
       </el-form-item>
       <el-form-item label="密码" label-width="120px">
-        <el-input v-model="formData.password" type="password" auto-complete="off"></el-input>
+        <el-input v-model="form.password" type="password" auto-complete="off"
+                  @keyup.enter.native="_confirm"></el-input>
       </el-form-item>
     </el-form>
     <div class="dialog-footer">
@@ -18,20 +19,34 @@
 <script>
 export default {
   props: {
-    cancel: Function,
-    confirm: Function
+    loginSuccess: Function,
+    loginFailed: Function
   },
   data() {
     return {
-      formData: {
+      form: {
         username: "",
         password: ""
       }
     };
   },
   methods: {
-    _confirm() {
-      this.confirm(this.formData);
+    async _confirm() {
+      const result = (await this.$http.post("/login", {
+        username: this.form.username,
+        password: this.form.password
+      })).data;
+      if (result.code === "Ok") {
+        this.$dialog.close();
+        this.loginSuccess();
+      } else {
+        this.form.password = "";
+        this.$message({
+          message: result.msg,
+          type: "info"
+        });
+        this.loginFailed();
+      }
     }
   }
 };
