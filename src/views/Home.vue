@@ -33,8 +33,12 @@ export default {
   },
   async created() {
     await this.load();
-    setInterval(async () => {
-      await this.load();
+    const interval = setInterval(async () => {
+      try {
+        await this.load();
+      } catch (e) {
+        clearInterval(interval);
+      }
     }, 3000);
     this.rules.forEach(rule => (rule.loading = false));
   },
