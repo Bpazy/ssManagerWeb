@@ -1,7 +1,8 @@
 <template>
   <div class="home">
     <div>
-      <el-button type="primary" icon="el-icon-plus" @click="addRule"></el-button>
+      <el-button type="primary" icon="el-icon-plus" @click="addRule">添加流量统计</el-button>
+      <el-button type="primary" icon="el-icon-plus" @click="addPortPassword">添加端口密码</el-button>
     </div>
 
     <div v-for="(rule, index) of rules" :key="rule.port" class="item">
@@ -61,6 +62,19 @@ export default {
           },
           cancel() {
             self.$dialog.close();
+          }
+        }
+      });
+    },
+    addPortPassword() {
+      this.$dialog.open({
+        component: () => import("@/views/AddPortPassword"),
+        props: {
+          success() {
+            this.$dialog.close();
+          },
+          fail() {
+            this.$dialog.close();
           }
         }
       });
@@ -138,7 +152,7 @@ export default {
 <style scoped>
 .home {
   width: 800px;
-  margin: 0 auto;
+  margin: 20px;
 }
 
 .item {
