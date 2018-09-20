@@ -3,6 +3,7 @@
     <div>
       <el-button type="primary" icon="el-icon-plus" @click="addRule">添加流量统计</el-button>
       <el-button type="primary" icon="el-icon-plus" @click="addPortPassword">添加端口密码</el-button>
+      <el-button type="primary" icon="el-icon-view" @click="queryPorts">查看当前端口</el-button>
     </div>
 
     <div v-for="(rule, index) of rules" :key="rule.port" class="item">
@@ -140,6 +141,12 @@ export default {
       } catch (e) {
         console.log(e);
       }
+    },
+    async queryPorts() {
+      const ports = (await this.$http.get("/queryPorts")).data;
+      this.$alert(ports, "端口列表", {
+        confirmButtonText: "确定"
+      });
     }
   },
   filters: {
