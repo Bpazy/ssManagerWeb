@@ -143,7 +143,7 @@ export default {
       }
     },
     async queryPorts() {
-      const ports = (await this.$http.get("/queryPorts")).data;
+      const ports = (await this.$http.get("/queryPortPasswords")).data;
       this.$alert(ports, "端口列表", {
         confirmButtonText: "确定"
       });
