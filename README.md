@@ -1,4 +1,4 @@
-# ss-manager-web
+# ss-manager-web [![Build Status](https://travis-ci.com/Bpazy/ssManagerWeb.svg?branch=master)](https://travis-ci.com/Bpazy/ssManagerWeb)
 
 ## Project setup
 ```
