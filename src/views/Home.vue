@@ -159,8 +159,8 @@ export default {
 </script>
 <style scoped>
 .home {
-  width: 800px;
   margin: 20px;
+  white-space: nowrap;
 }
 
 .item {
@@ -175,10 +175,12 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .usage {
   flex: none;
-  margin-right: 20px;
+  width: 200px;
 }
+
 .buttons {
   flex: 1;
 }
