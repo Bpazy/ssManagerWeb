@@ -8,7 +8,8 @@
 
     <div v-for="(rule, index) of rules" :key="rule.port" class="item">
       <span class="alias">{{rule.port}}({{rule.alias}}): </span>
-      <span class="usage">{{rule.usage | readable}}</span>
+      <span class="usage">下行流量: {{rule.downStreamUsage | readable}}</span>
+      <span class="usage">上行流量: {{rule.upStreamUsage | readable}}</span>
       <div class="buttons">
         <el-button type="primary" icon="el-icon-edit" size="mini" @click="editRule(rule)">编辑</el-button>
         <el-button type="primary" icon="el-icon-refresh" size="mini"  @click="resetRule(rule)">重置</el-button>
@@ -176,8 +177,7 @@ export default {
 }
 .usage {
   flex: none;
-  width: 100px;
-  margin-left: 10px;
+  margin-right: 20px;
 }
 .buttons {
   flex: 1;
