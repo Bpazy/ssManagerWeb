@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     async load() {
-      this.rules = (await this.$http.get("/list")).data;
+      this.rules = (await this.$http.get("/usage/list")).data;
     },
     addRule() {
       const self = this;
@@ -55,7 +55,7 @@ export default {
         component: () => import("@/views/AddSetting"),
         props: {
           async confirm(form) {
-            await self.$http.post("/save", {
+            await self.$http.post("/usage/save", {
               port: parseInt(form.port),
               alias: form.alias
             });
@@ -89,7 +89,7 @@ export default {
           type: "warning"
         });
         const { code, msg } = (await this.$http.get(
-          `/delete/${rule.port}`
+          `/usage/delete/${rule.port}`
         )).data;
         if (code === "Ok") this.$message({ message: msg, type: "success" });
         else this.$message.error(msg);
@@ -110,7 +110,7 @@ export default {
             alias: rule.alias
           },
           async confirm(form) {
-            const { code, msg } = (await self.$http.post("/edit", {
+            const { code, msg } = (await self.$http.post("/usage/edit", {
               port: parseInt(form.port),
               alias: form.alias
             })).data;
@@ -133,7 +133,7 @@ export default {
           type: "warning"
         });
         const { code, msg } = (await this.$http.get(
-          `/reset/${rule.port}`
+          `/usage/reset/${rule.port}`
         )).data;
         if (code === "Ok") this.$message({ message: msg, type: "success" });
         else this.$message.error(msg);
@@ -144,7 +144,7 @@ export default {
       }
     },
     async queryPorts() {
-      const ports = (await this.$http.get("/queryPortPasswords")).data;
+      const ports = (await this.$http.get("/ss/queryPortPasswords")).data;
       this.$alert(ports, "端口列表", {
         confirmButtonText: "确定"
       });

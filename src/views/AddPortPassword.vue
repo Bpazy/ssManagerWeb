@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     async confirm() {
-      const { code, msg } = (await this.$http.post("/addPortPassword", {
+      const { code, msg } = (await this.$http.post("/ss/addPortPassword", {
         port: this.formData.port,
         password: this.formData.password
       })).data;
