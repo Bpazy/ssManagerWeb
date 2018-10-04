@@ -12,7 +12,7 @@
       <span class="usage">上行流量: {{rule.upstreamUsage | readable}}</span>
       <div class="buttons">
         <el-button type="primary" icon="el-icon-edit" size="mini" @click="editRule(rule)">编辑</el-button>
-        <el-button type="primary" icon="el-icon-refresh" size="mini"  @click="resetRule(rule)">重置</el-button>
+        <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetRule(rule)">重置</el-button>
         <el-button type="primary" icon="el-icon-delete" size="mini" @click="deleteRule(rule, index)">删除</el-button>
       </div>
     </div>
@@ -20,6 +20,10 @@
 </template>
 
 <script>
+let reConnect = "";
+let ws = "";
+let pingInterval = "";
+
 export default {
   name: "home",
   data() {
@@ -35,19 +39,36 @@ export default {
     };
   },
   async created() {
-    await this.load();
-    const interval = setInterval(async () => {
-      try {
-        await this.load();
-      } catch (e) {
-        clearInterval(interval);
-      }
-    }, 3000);
-    this.rules.forEach(rule => (rule.loading = false));
+    this.initWebSocket();
   },
   methods: {
-    async load() {
-      this.rules = (await this.$http.get("/usage/list")).data;
+    initWebSocket() {
+      reConnect = "";
+      const self = this;
+      ws = new WebSocket("ws://127.0.0.1:8082/api/echo");
+      ws.onopen = function() {
+        console.log("连接服务器成功");
+        pingInterval = setInterval(() => {
+          ws.send("ping");
+        }, 1000);
+      };
+      ws.onclose = function() {
+        console.log("服务器关闭");
+        clearInterval(pingInterval);
+        if (!reConnect) {
+          reConnect = setTimeout(self.initWebSocket, 3000);
+        }
+      };
+      ws.onerror = function() {
+        console.log("连接出错");
+        clearInterval(pingInterval);
+        if (!reConnect) {
+          reConnect = setTimeout(self.initWebSocket, 3000);
+        }
+      };
+      ws.onmessage = function(e) {
+        self.rules = JSON.parse(e.data);
+      };
     },
     addRule() {
       const self = this;
@@ -59,7 +80,6 @@ export default {
               port: parseInt(form.port),
               alias: form.alias
             });
-            await self.load();
             self.$dialog.close();
           },
           cancel() {
@@ -93,8 +113,6 @@ export default {
         )).data;
         if (code === "Ok") this.$message({ message: msg, type: "success" });
         else this.$message.error(msg);
-
-        await this.load();
       } catch (e) {
         console.log(e);
       }
@@ -114,7 +132,6 @@ export default {
               port: parseInt(form.port),
               alias: form.alias
             })).data;
-            await self.load();
             self.$dialog.close();
             if (code === "Ok") this.$message({ message: msg, type: "success" });
             else this.$message.error(msg);
@@ -137,8 +154,6 @@ export default {
         )).data;
         if (code === "Ok") this.$message({ message: msg, type: "success" });
         else this.$message.error(msg);
-
-        await this.load();
       } catch (e) {
         console.log(e);
       }
@@ -168,6 +183,7 @@ export default {
   height: 40px;
   line-height: 40px;
 }
+
 .alias {
   flex: none;
   width: 150px;
