@@ -45,12 +45,12 @@ export default {
     initWebSocket() {
       reConnect = "";
       const self = this;
-      ws = new WebSocket("ws://127.0.0.1:8082/api/echo");
+      ws = new WebSocket(`ws://${document.location.host}:8082/api/echo`);
       ws.onopen = function() {
         console.log("连接服务器成功");
         pingInterval = setInterval(() => {
           ws.send("ping");
-        }, 1000);
+        }, 10 * 1000);
       };
       ws.onclose = function() {
         console.log("服务器关闭");
