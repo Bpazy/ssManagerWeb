@@ -45,7 +45,7 @@ export default {
     initWebSocket() {
       reConnect = "";
       const self = this;
-      ws = new WebSocket(`ws://${document.location.host}:8082/api/echo`);
+      ws = new WebSocket(`ws://${document.location.host}/api/echo`);
       ws.onopen = function() {
         console.log("连接服务器成功");
         pingInterval = setInterval(() => {

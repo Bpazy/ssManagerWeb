@@ -47,6 +47,9 @@ export default {
         });
         this.loginFailed();
       }
+    },
+    cancel() {
+      this.$dialog.close();
     }
   }
 };
