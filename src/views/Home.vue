@@ -20,10 +20,6 @@
 </template>
 
 <script>
-let reConnect = "";
-let ws = "";
-let pingInterval = "";
-
 export default {
   name: "home",
   data() {
@@ -39,13 +35,25 @@ export default {
     };
   },
   async created() {
-    this.initWebSocket();
+    await this.initWebSocket();
   },
   methods: {
-    initWebSocket() {
-      reConnect = "";
+    async initWebSocket() {
+      let reConnect = "";
+      let pingInterval = "";
+
       const self = this;
-      ws = new WebSocket(`ws://${document.location.host}/api/echo`);
+
+      let token = "";
+      try {
+        token = (await this.$http.get("/token")).data;
+      } catch (e) {
+        console.log(e);
+      }
+      let ws = new WebSocket(
+        `ws://${document.location.host}/ws/echo?token=${token}`
+      );
+      console.log("正在连接服务器");
       ws.onopen = function() {
         console.log("连接服务器成功");
         pingInterval = setInterval(() => {
