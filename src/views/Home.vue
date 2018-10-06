@@ -8,8 +8,10 @@
 
     <div v-for="(rule, index) of rules" :key="rule.port" class="item">
       <span class="alias">{{rule.port}}({{rule.alias}}): </span>
-      <span class="usage">下行流量: {{rule.downstreamUsage | readable}}</span>
-      <span class="usage">上行流量: {{rule.upstreamUsage | readable}}</span>
+      <span class="usage">下行流量: {{rule.downstreamUsage | usageReadable}}</span>
+      <span class="usage">上行流量: {{rule.upstreamUsage | usageReadable}}</span>
+      <span class="usage">下行速度: {{downSpeed(rule.port)}}</span>
+      <span class="usage">上行速度: {{upSpeed(rule.port)}}</span>
       <div class="buttons">
         <el-button type="primary" icon="el-icon-edit" size="mini" @click="editRule(rule)">编辑</el-button>
         <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetRule(rule)">重置</el-button>
@@ -31,13 +33,29 @@ export default {
       },
       addLoading: false,
       deleteLoading: false,
-      addDialogFormVisible: false
+      addDialogFormVisible: false,
+      wsTimeout: "",
+      speed: {}
     };
   },
   async created() {
     await this.initWebSocket();
   },
   methods: {
+    downSpeed(port) {
+      const kbSpeed = this.speed[port].downSpeed / 1024;
+      if (kbSpeed < 1024) {
+        return `${kbSpeed.toFixed(2)}KB/s`;
+      }
+      return `${(kbSpeed / 1024).toFixed(2)}MB/s`;
+    },
+    upSpeed(port) {
+      const kbSpeed = this.speed[port].downSpeed / 1024;
+      if (kbSpeed < 1024) {
+        return `${kbSpeed.toFixed(2)}KB/s`;
+      }
+      return `${(kbSpeed / 1024).toFixed(2)}MB/s`;
+    },
     async initWebSocket() {
       let reConnect = "";
       let pingInterval = "";
@@ -74,9 +92,23 @@ export default {
           reConnect = setTimeout(self.initWebSocket, 3000);
         }
       };
-      ws.onmessage = function(e) {
-        self.rules = JSON.parse(e.data);
+      ws.onmessage = function({ data }) {
+        self.resetWsTimeout(ws);
+        data = JSON.parse(data);
+        if (data.type === "Usage") {
+          self.rules = data.data;
+        }
+        if (data.type === "Speed") {
+          self.speed = data.data;
+        }
+        self.$forceUpdate();
       };
+    },
+    resetWsTimeout(ws) {
+      clearTimeout(this.wsTimeout);
+      this.wsTimeout = setTimeout(() => {
+        ws.close();
+      }, 10 * 1000);
     },
     addRule() {
       const self = this;
@@ -174,7 +206,7 @@ export default {
     }
   },
   filters: {
-    readable(usage) {
+    usageReadable(usage) {
       return `${(usage / 1024 / 1024).toFixed(2)}MB`;
     }
   }
