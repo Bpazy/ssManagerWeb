@@ -43,6 +43,8 @@ export default {
   },
   methods: {
     downSpeed(port) {
+      if (!this.speed[port]) return "";
+
       const kbSpeed = this.speed[port].downSpeed / 1024;
       if (kbSpeed < 1024) {
         return `${kbSpeed.toFixed(2)}KB/s`;
@@ -50,7 +52,9 @@ export default {
       return `${(kbSpeed / 1024).toFixed(2)}MB/s`;
     },
     upSpeed(port) {
-      const kbSpeed = this.speed[port].downSpeed / 1024;
+      if (!this.speed[port]) return "";
+
+      const kbSpeed = this.speed[port].upSpeed / 1024;
       if (kbSpeed < 1024) {
         return `${kbSpeed.toFixed(2)}KB/s`;
       }
