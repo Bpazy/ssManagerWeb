@@ -1,4 +1,5 @@
 # ss-manager-web [![Build Status](https://travis-ci.com/Bpazy/ssManagerWeb.svg?branch=master)](https://travis-ci.com/Bpazy/ssManagerWeb)
+Maybe you can try [github.com/sprov065/v2-ui](https://github.com/sprov065/v2-ui)
 
 ## Project setup
 ```
